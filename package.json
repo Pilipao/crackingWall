@@ -1,25 +1,32 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "crackingwall-astro",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "lint": "eslint ."
   },
   "dependencies": {
+    "@astrojs/partytown": "^2.1.4",
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/tailwind": "^6.0.2",
     "@faker-js/faker": "^10.1.0",
     "@supabase/supabase-js": "^2.39.0",
+    "astro": "^5.16.6",
     "axios": "^1.6.2",
+    "clsx": "^2.1.1",
     "framer-motion": "^10.16.0",
     "lucide-react": "^0.294.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-helmet": "^6.1.0",
     "react-helmet-async": "^2.0.5",
-    "react-router-dom": "^6.20.0"
+    "react-router-dom": "^6.20.0",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

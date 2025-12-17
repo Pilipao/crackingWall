@@ -69,7 +69,7 @@ export const WallpaperModal: React.FC<WallpaperModalProps> = ({
                   </h3>
                   <div className="space-y-2 font-brutal font-bold text-brutal-black">
                     <div>CATEGORÍA: {wallpaper.category}</div>
-                  
+
                     <div>LIKES: {wallpaper.likes.toLocaleString()}</div>
                     <div>DESCARGAS: {wallpaper.downloads.toLocaleString()}</div>
                   </div>
@@ -112,6 +112,17 @@ export const WallpaperModal: React.FC<WallpaperModalProps> = ({
                         <span>VER ORIGINAL</span>
                       </div>
                     </BrutalButton>
+
+                    <a
+                      href={`/wallpaper/${wallpaper.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${wallpaper.id}`}
+                      className="w-full inline-block"
+                    >
+                      <BrutalButton variant="secondary" className="w-full">
+                        <div className="flex items-center justify-center space-x-2">
+                          <span>VER PAGINA DETALLE</span>
+                        </div>
+                      </BrutalButton>
+                    </a>
                   </div>
                 </div>
               </div>

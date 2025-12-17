@@ -1,0 +1,48 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { WallpaperService } from '../../services/wallpaperService';
+import { WallpapersGridContainer } from '../../components/WallpapersGridContainer'; // We need to create this
+
+export async function getStaticPaths() {
+  try {
+    const wallpapers = await WallpaperService.getAllWallpapers();
+    
+    if (!wallpapers || wallpapers.length === 0) {
+      console.warn('No wallpapers found, returning empty paths');
+      return [];
+    }
+    
+    // Extract unique categories
+    const categories = [...new Set(wallpapers.map(w => w.category))];
+    
+    console.log('Generated categories:', categories);
+    
+    return categories.map(tag => {
+      const filtered = wallpapers.filter(w => w.category === tag);
+      return {
+        params: { tag: tag.toLowerCase() },
+        props: { tag, wallpapers: filtered },
+      };
+    });
+  } catch (error) {
+    console.error('Error in getStaticPaths:', error);
+    return [];
+  }
+}
+
+const { tag, wallpapers } = Astro.props;
+---
+
+<Layout title={`${tag} Wallpapers | CrackingWall`} description={`Browse ${tag} wallpapers.`}>
+  <div class="mb-8 text-center">
+    <h1 class="text-4xl font-brutal font-black uppercase mb-4">
+      {tag} Collection
+    </h1>
+    <p class="text-brutal-black/60 font-bold">{wallpapers.length} Wallpapers</p>
+  </div>
+
+  <WallpapersGridContainer 
+    client:load 
+    initialWallpapers={wallpapers} 
+  />
+</Layout>

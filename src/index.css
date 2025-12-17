@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Scanlines effect CRT */
+/* Scanlines effect CRT - subtle overlay */
 body::before {
   content: '';
   position: fixed;
@@ -10,21 +10,24 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0.15) 1px,
-    transparent 1px,
-    transparent 2px
-  );
+  background: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.05) 1px,
+      transparent 1px,
+      transparent 2px);
   pointer-events: none;
-  z-index: 9999;
+  z-index: 1;
   animation: scanline 8s linear infinite;
 }
 
 @keyframes scanline {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(10px); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(10px);
+  }
 }
 
 /* Glitch text effect */
@@ -44,12 +47,19 @@ body::before {
 }
 
 @keyframes glitch-overlay {
-  0%, 96%, 100% { opacity: 0; }
-  97% { 
+
+  0%,
+  96%,
+  100% {
+    opacity: 0;
+  }
+
+  97% {
     opacity: 0.8;
     transform: translate(-3px, 3px);
   }
-  98% { 
+
+  98% {
     opacity: 0.6;
     transform: translate(3px, -3px);
   }

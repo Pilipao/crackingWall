@@ -248,7 +248,7 @@ const HomePage: React.FC = () => {
     const styleElement = document.createElement('style');
     styleElement.textContent = cyberpunkStyles;
     document.head.appendChild(styleElement);
-    
+
     return () => {
       document.head.removeChild(styleElement);
     };
@@ -256,39 +256,29 @@ const HomePage: React.FC = () => {
   return (
     <>
       {/* Hero Section */}
-      <div className="hero">
-        <div className="hero-content">
-          <h1 className="hero-title">TECH CULTURE WALLPAPER</h1>
-          <p className="hero-subtitle">
-            Discover and download the best tech, cyberpunk, and hacker wallpapers for your devices.
-          </p>
-          <Link to="/wallpapers" className="cta-button">
-            Browse Wallpapers
-          </Link>
-        </div>
-      </div>
+
 
       {/* Featured Categories */}
       <section className="categories-section">
         <h2 className="section-title">Featured Categories</h2>
-        
+
         <div className="categories-grid">
           {[
-            { 
-              name: 'Cyberpunk', 
-              description: 'Neon-lit cityscapes and futuristic visuals' 
+            {
+              name: 'Cyberpunk',
+              description: 'Neon-lit cityscapes and futuristic visuals'
             },
-            { 
-              name: 'Hacker', 
-              description: 'Matrix-style code and terminal aesthetics' 
+            {
+              name: 'Hacker',
+              description: 'Matrix-style code and terminal aesthetics'
             },
-            { 
-              name: 'Minimalist', 
-              description: 'Clean and simple tech-inspired designs' 
+            {
+              name: 'Minimalist',
+              description: 'Clean and simple tech-inspired designs'
             },
-            { 
-              name: 'Abstract', 
-              description: 'Creative and artistic tech patterns' 
+            {
+              name: 'Abstract',
+              description: 'Creative and artistic tech patterns'
             }
           ].map((category) => (
             <Link

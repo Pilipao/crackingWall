@@ -1,0 +1,26 @@
+import { defineConfig } from 'astro/config';
+import react from '@astrojs/react';
+import tailwind from '@astrojs/tailwind';
+import sitemap from '@astrojs/sitemap';
+import partytown from '@astrojs/partytown';
+
+// https://astro.build/config
+export default defineConfig({
+  site: 'https://crackingwall.com', // Replace with actual domain
+  integrations: [
+    react(),
+    tailwind({
+      applyBaseStyles: false, // We'll import our own base styles
+    }),
+    sitemap(),
+    partytown({
+      config: {
+        forward: ["dataLayer.push"],
+      },
+    }),
+  ],
+  output: 'static',
+  build: {
+    assets: 'assets',
+  }
+});

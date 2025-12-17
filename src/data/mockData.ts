@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { Wallpaper, Category } from '../types';
 
-// Categorías brutales
-const categories = ['ABSTRACT', 'NATURE', 'URBAN', 'MINIMAL', 'COLORFUL', 'DARK'];
+// Categorías que coinciden con el diseño de la homepage
+const categories = ['Cyberpunk', 'Hacker', 'Minimalist', 'Abstract', 'Nature', 'Dark'];
 
 // URLs de wallpapers de ejemplo (usando placeholders diversos)
 const getWallpaperUrl = (width: number, height: number, category: string) => {
@@ -17,16 +17,26 @@ export const generateMockWallpapers = (count: number): Wallpaper[] => {
     const category = faker.helpers.arrayElement(categories);
     const width = faker.helpers.arrayElement([1920, 2560, 3840]);
     const height = faker.helpers.arrayElement([1080, 1440, 2160]);
-    
+
     return {
       id: faker.string.uuid(),
       title: `${category} ${faker.number.int({ min: 1, max: 999 })}`,
+      description: `Beautiful ${category.toLowerCase()} wallpaper for your desktop`,
       category,
       url: getWallpaperUrl(width, height, category),
+      alt_text: `${category} wallpaper`,
+      width,
+      height: height.toString(),
+      file_size: faker.number.int({ min: 1000000, max: 5000000 }), // 1-5 MB
+      format: 'webp' as const,
+      created_at: faker.date.past().toISOString(),
+      updated_at: faker.date.recent().toISOString(),
       resolution: `${width}x${height}`,
       downloads: faker.number.int({ min: 50, max: 50000 }),
       likes: faker.number.int({ min: 5, max: 5000 }),
-      isLiked: faker.datatype.boolean()
+      isLiked: faker.datatype.boolean(),
+      is_featured: faker.datatype.boolean({ probability: 0.2 }),
+      tags: [category.toLowerCase(), 'wallpaper', 'hd']
     };
   });
 };

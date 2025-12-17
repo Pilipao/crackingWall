@@ -29,12 +29,12 @@ export const Header: React.FC<HeaderProps> = ({ onSearchChange, onAuthClick }) =
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <motion.h1 
+          <motion.h1
             initial={{ y: -20 }}
             animate={{ y: 0 }}
             className="text-4xl md:text-6xl font-brutal font-black text-white drop-shadow-[3px_3px_0_#00fff9] animate-glitch"
           >
-            WALLPAPERS
+            CrakingWall
           </motion.h1>
 
           {/* Desktop Navigation */}
@@ -110,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearchChange, onAuthClick }) =
                   onChange={handleSearchChange}
                   className="w-full px-4 py-3 text-lg font-brutal font-bold bg-brutal-yellow border-4 border-brutal-black shadow-brutal focus:outline-none placeholder-brutal-black"
                 />
-                
+
                 {user ? (
                   <div className="space-y-2">
                     <div className="p-3 bg-brutal-lime border-4 border-brutal-black shadow-brutal text-center">

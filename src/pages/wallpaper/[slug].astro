@@ -1,0 +1,108 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { WallpaperService } from '../../services/wallpaperService';
+import type { Wallpaper } from '../../types';
+import { BrutalButton } from '../../components/BrutalButton'; // Assuming we can use React component or recreate in Astro html
+import { ArrowLeft, Download, Heart } from 'lucide-react';
+
+export async function getStaticPaths() {
+  const wallpapers = await WallpaperService.getAllWallpapers();
+  
+  return wallpapers.map((wallpaper) => {
+    // Generate a simple slug from title + id to ensure uniqueness and SEO
+    const slug = `${wallpaper.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${wallpaper.id}`;
+    return {
+      params: { slug },
+      props: { wallpaper },
+    };
+  });
+}
+
+const { wallpaper } = Astro.props;
+
+// Re-create the slug for canonical URL consistency if needed, or just use Astro.url
+---
+
+<Layout 
+  title={`${wallpaper.title} Wallpaper | CrackingWall`}
+  description={`Download ${wallpaper.title} wallpaper. ${wallpaper.description || 'High quality tech background.'}`}
+  image={wallpaper.url}
+>
+  <div class="max-w-6xl mx-auto">
+    <a href="/wallpapers" class="inline-flex items-center space-x-2 text-brutal-black mb-6 hover:text-brutal-accent transition-colors font-bold font-brutal">
+      <ArrowLeft className="w-5 h-5" />
+      <span>BACK TO WALLPAPERS</span>
+    </a>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+      <!-- Image Display -->
+      <div class="bg-brutal-dark-deeper p-2 shadow-brutal border-4 border-brutal-black">
+        <div class="relative overflow-hidden group">
+          <img 
+            src={wallpaper.url} 
+            alt={wallpaper.alt_text || wallpaper.title}
+            class="w-full h-auto object-cover"
+            transition:name={`wallpaper-${wallpaper.id}`}
+          />
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="space-y-8">
+        <div>
+          <h1 class="text-4xl md:text-5xl font-brutal font-black mb-4 uppercase leading-tight">
+            {wallpaper.title}
+          </h1>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="px-3 py-1 bg-brutal-accent text-white font-bold text-sm border-2 border-brutal-black shadow-sm uppercase">
+              {wallpaper.category}
+            </span>
+            <span class="px-3 py-1 bg-brutal-gray text-brutal-black font-bold text-sm border-2 border-brutal-black shadow-sm uppercase">
+              {wallpaper.resolution}
+            </span>
+          </div>
+          <p class="text-lg text-brutal-black/80 font-medium">
+            {wallpaper.description}
+          </p>
+        </div>
+
+        <!-- Actions (Client Side Buttons would go here) -->
+        <!-- For MVP SSG, we can put simple links or use the React components client:load -->
+        <!-- We use a custom React component for interactions -->
+        <div class="flex flex-col sm:flex-row gap-4">
+            <!-- We will eventually hydrate a Like/Download button here. 
+                 For now standard buttons. -->
+             <button class="flex items-center justify-center space-x-2 bg-brutal-neon-green text-brutal-black px-8 py-4 font-brutal font-black text-lg border-4 border-brutal-black shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-pointer">
+                <Download className="w-6 h-6" />
+                <span>DOWNLOAD WALLPAPER</span>
+             </button>
+             
+             <button class="flex items-center justify-center space-x-2 bg-brutal-white text-brutal-black px-8 py-4 font-brutal font-black text-lg border-4 border-brutal-black shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-pointer">
+                <Heart className="w-6 h-6" />
+                <span>LIKE ({wallpaper.likes})</span>
+             </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 gap-4 pt-8 border-t-4 border-brutal-black/10">
+           <div>
+              <p class="text-sm font-bold opacity-60 uppercase">Downloads</p>
+              <p class="text-2xl font-black">{wallpaper.downloads}</p>
+           </div>
+           <div>
+              <p class="text-sm font-bold opacity-60 uppercase">Resolution</p>
+              <p class="text-2xl font-black">{wallpaper.width}x{wallpaper.height || 'Auto'}</p>
+           </div>
+           <div>
+              <p class="text-sm font-bold opacity-60 uppercase">Format</p>
+              <p class="text-2xl font-black uppercase">{wallpaper.format || 'JPG'}</p>
+           </div>
+           <div>
+              <p class="text-sm font-bold opacity-60 uppercase">Size</p>
+              <p class="text-2xl font-black">{Math.round((wallpaper.file_size || 0)/1024/1024 * 10)/10} MB</p>
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

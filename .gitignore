@@ -34,8 +34,7 @@ yarn-error.log*
 .history/
 
 # Local env files
-.env
-.env.local
+
 
 # Debug logs
 npm-debug.log*

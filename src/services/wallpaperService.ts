@@ -1,20 +1,29 @@
 import { supabase } from '../lib/supabase';
 import { Wallpaper } from '../types';
 
+import { mockWallpapers } from '../data/mockData';
+
 export class WallpaperService {
   // Obtener todos los wallpapers (sin usuario autenticado)
   static async getAllWallpapers(): Promise<Wallpaper[]> {
-    const { data, error } = await supabase
-      .from('wallpapers')
-      .select('*')
-      .order('created_at', { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from('wallpapers')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    if (error) throw error;
+      if (error) throw error;
 
-    return data.map(wallpaper => ({
-      ...wallpaper,
-      isLiked: false
-    }));
+      if (!data || data.length === 0) return mockWallpapers;
+
+      return data.map(wallpaper => ({
+        ...wallpaper,
+        isLiked: false
+      }));
+    } catch (error) {
+      console.warn('Backend failed, using mock data:', error);
+      return mockWallpapers;
+    }
   }
 
   // Obtener wallpapers con estado de like del usuario
@@ -53,15 +62,15 @@ export class WallpaperService {
         const { error } = await supabase
           .from('user_likes')
           .insert([{ user_id: userId, wallpaper_id: wallpaperId }]);
-        
+
         if (error) throw error;
-        
+
         // Increment like count
         const { error: updateError } = await supabase
           .from('wallpapers')
           .update({ likes: supabase.rpc('increment') })
           .eq('id', wallpaperId);
-          
+
         if (updateError) throw updateError;
       } else {
         // Remove like
@@ -70,16 +79,16 @@ export class WallpaperService {
           .delete()
           .eq('user_id', userId)
           .eq('wallpaper_id', wallpaperId);
-        
+
         if (error) throw error;
-        
+
         // Decrement like count
         const { error: updateError } = await supabase
           .from('wallpapers')
           .update({ likes: supabase.rpc('decrement') })
           .eq('id', wallpaperId)
           .gt('likes', 0);
-          
+
         if (updateError) throw updateError;
       }
     } catch (error) {
@@ -95,7 +104,7 @@ export class WallpaperService {
         .from('wallpapers')
         .update({ downloads: supabase.rpc('increment') })
         .eq('id', wallpaperId);
-        
+
       if (error) throw error;
     } catch (error) {
       console.error('Error incrementing downloads:', error);
@@ -125,8 +134,8 @@ export class WallpaperService {
     if (insertError) throw insertError;
 
     // Incrementar contador en wallpapers usando RPC
-    const { error: updateError } = await supabase.rpc('increment_likes', { 
-      wallpaper_id: wallpaperId 
+    const { error: updateError } = await supabase.rpc('increment_likes', {
+      wallpaper_id: wallpaperId
     });
 
     if (updateError) {
@@ -136,11 +145,11 @@ export class WallpaperService {
         .select('likes')
         .eq('id', wallpaperId)
         .single();
-        
+
       if (currentWallpaper) {
         await supabase
           .from('wallpapers')
-          .update({ 
+          .update({
             likes: (currentWallpaper.likes || 0) + 1,
             updated_at: new Date().toISOString()
           })
@@ -160,8 +169,8 @@ export class WallpaperService {
     if (deleteError) throw deleteError;
 
     // Decrementar contador usando RPC
-    const { error: updateError } = await supabase.rpc('decrement_likes', { 
-      wallpaper_id: wallpaperId 
+    const { error: updateError } = await supabase.rpc('decrement_likes', {
+      wallpaper_id: wallpaperId
     });
 
     if (updateError) {
@@ -171,11 +180,11 @@ export class WallpaperService {
         .select('likes')
         .eq('id', wallpaperId)
         .single();
-        
+
       if (currentWallpaper) {
         await supabase
           .from('wallpapers')
-          .update({ 
+          .update({
             likes: Math.max((currentWallpaper.likes || 0) - 1, 0),
             updated_at: new Date().toISOString()
           })
@@ -193,19 +202,27 @@ export class WallpaperService {
     if (insertError) throw insertError;
 
     // Incrementar contador de descargas usando RPC
-    const { error: updateError } = await supabase.rpc('increment_downloads', { 
-      wallpaper_id: wallpaperId 
+    const { error: updateError } = await supabase.rpc('increment_downloads', {
+      wallpaper_id: wallpaperId
     });
 
     if (updateError) {
       // Si falla el RPC, incrementar manualmente
-      await supabase
+      const { data: current } = await supabase
         .from('wallpapers')
-        .update({ 
-          downloads: supabase.raw('downloads + 1'),
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', wallpaperId);
+        .select('downloads')
+        .eq('id', wallpaperId)
+        .single();
+
+      if (current) {
+        await supabase
+          .from('wallpapers')
+          .update({
+            downloads: (current.downloads || 0) + 1,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', wallpaperId);
+      }
     }
   }
 
