@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://crackingwall.com/sitemap-index.xml
+Sitemap: https://crakingculturewallpaperr.xyz/sitemap.xml
