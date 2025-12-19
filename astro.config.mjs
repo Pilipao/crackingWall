@@ -6,7 +6,7 @@ import partytown from '@astrojs/partytown';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://crackingwall.com', // Replace with actual domain
+  site: 'https://crakingculturewallpaperr.xyz', // Replace with actual domain
   integrations: [
     react(),
     tailwind({
